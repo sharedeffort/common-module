@@ -44,4 +44,11 @@ public record ApiResponse<T>(
     public static <T> ApiResponse<T> error(T errorData) {
         return new ApiResponse<>(false, null, errorData, System.currentTimeMillis());
     }
+
+    /**
+     * 실패 응답 생성 (에러데이터 + 메시지)
+     */
+    public static <T> ApiResponse<T> error(T errorData, String message) {
+        return new ApiResponse<>(false, message, errorData, System.currentTimeMillis());
+    }
 }
