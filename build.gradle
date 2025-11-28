@@ -6,45 +6,40 @@ plugins {
     id 'maven-publish'
 }
 
-group = 'com.library'
-version = '0.0.1-SNAPSHOT'
+
+group = 'com.github.sharedeffort'  // ← 변경: GitHub 사용자명/조직명
+version = '1.1.2'
 description = 'module'
+
 
 publishing {
     publications {
-        create('maven', MavenPublication) {
-            groupId = 'com.library'
-            artifactId = 'module'
+        maven(MavenPublication) {  // ← create 대신 간단하게
+            groupId = 'com.github.sharedeffort'  // ← group과 동일하게
+            artifactId = 'common-module'  // ← 저장소 이름과 동일하게
             version = '1.1.2'
 
             from components.java
 
-            versionMapping{
-                usage('java-api'){
+            versionMapping {
+                usage('java-api') {
                     fromResolutionOf('runtimeClasspath')
                 }
-                usage('java-runtime'){
+                usage('java-runtime') {
                     fromResolutionResult()
                 }
             }
         }
     }
 
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/sharedeffort/common-module")
-            credentials {
-                username = project.property('githubUsername')
-                password = project.property('githubToken')
-            }
-        }
-    }
 }
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
+    withSourcesJar()
+    withJavadocJar()
 }
 
 configurations {
@@ -70,6 +65,11 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
 tasks.named('bootJar') {
     enabled = false
+}
+
+tasks.named('jar') {
+    enabled = true  // ← 추가
 }
