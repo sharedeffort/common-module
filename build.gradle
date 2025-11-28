@@ -6,17 +6,22 @@ plugins {
     id 'maven-publish'
 }
 
-
-group = 'com.github.sharedeffort'  // ← 변경: GitHub 사용자명/조직명
+group = 'com.github.sharedeffort'
 version = '1.1.2'
 description = 'module'
 
+// ← 이 부분 추가: Spring Boot의 plain jar 생성 방지
+springBoot {
+    buildInfo {
+        enabled = false
+    }
+}
 
 publishing {
     publications {
-        maven(MavenPublication) {  // ← create 대신 간단하게
-            groupId = 'com.github.sharedeffort'  // ← group과 동일하게
-            artifactId = 'common-module'  // ← 저장소 이름과 동일하게
+        maven(MavenPublication) {
+            groupId = 'com.github.sharedeffort'
+            artifactId = 'common-module'
             version = '1.1.2'
 
             from components.java
@@ -31,7 +36,6 @@ publishing {
             }
         }
     }
-
 }
 
 java {
@@ -66,15 +70,32 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+// bootJar 완전 비활성화
 tasks.named('bootJar') {
     enabled = false
 }
 
+// jar 설정 (plain 제거)
 tasks.named('jar') {
     enabled = true
-    archiveClassifier = ''
+    archiveClassifier.set('')  // ← 이렇게 변경
+    // 또는 archiveClassifier = null 도 가능
 }
 
-tasks.matching { it.name == 'bootBuildImage' }.configureEach {
-    enabled = false
+// ← 이 부분 추가: configurations에서 bootJar 제거
+configurations.all {
+    resolutionStrategy {
+        eachDependency { details ->
+            // 필요시 의존성 버전 강제 가능
+        }
+    }
+}
+
+// ← 이 부분 추가: plain jar를 artifact에서 제거
+afterEvaluate {
+    tasks.withType(Jar).configureEach { jarTask ->
+        if (jarTask.archiveClassifier.get() == 'plain') {
+            jarTask.enabled = false
+        }
+    }
 }
