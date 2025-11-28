@@ -15,7 +15,7 @@ publishing {
         create('maven', MavenPublication) {
             groupId = 'com.library'
             artifactId = 'module'
-            version = '1.1.1'
+            version = '1.1.2'
 
             from components.java
 
