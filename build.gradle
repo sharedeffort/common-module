@@ -71,5 +71,10 @@ tasks.named('bootJar') {
 }
 
 tasks.named('jar') {
-    enabled = true  // ← 추가
+    enabled = true
+    archiveClassifier = ''
+}
+
+tasks.matching { it.name == 'bootBuildImage' }.configureEach {
+    enabled = false
 }
