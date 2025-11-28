@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'com.github.sharedeffort'
-version = '1.1.6'  // ← 버전 관리
+version = '1.1.7'  // ← 버전 관리
 description = 'common-module'
 
 // Spring Boot BOM만 import (버전 관리용)
@@ -53,13 +53,10 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    testImplementation 'com.h2database:h2'
 }
 
 tasks.named('test') {
