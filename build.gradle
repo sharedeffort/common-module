@@ -1,19 +1,19 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '4.0.0'
-    id 'io.spring.dependency-management' version '1.1.7'
     id 'java-library'
     id 'maven-publish'
+    // Spring Boot 플러그인 제거!
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'com.github.sharedeffort'
-version = '1.1.2'
-description = 'module'
+version = '1.1.3'  // ← 버전 업
+description = 'common-module'
 
-// ← 이 부분 추가: Spring Boot의 plain jar 생성 방지
-springBoot {
-    buildInfo {
-        enabled = false
+// Spring Boot BOM만 import (버전 관리용)
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.boot:spring-boot-dependencies:4.0.0'
     }
 }
 
@@ -22,7 +22,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'com.github.sharedeffort'
             artifactId = 'common-module'
-            version = '1.1.2'
+            version = '1.1.3'
 
             from components.java
 
@@ -58,10 +58,10 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation 'com.h2database:h2'
 }
@@ -70,32 +70,7 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-// bootJar 완전 비활성화
-tasks.named('bootJar') {
-    enabled = false
-}
-
-// jar 설정 (plain 제거)
-tasks.named('jar') {
+// jar 태스크는 기본 설정으로 충분
+jar {
     enabled = true
-    archiveClassifier.set('')  // ← 이렇게 변경
-    // 또는 archiveClassifier = null 도 가능
-}
-
-// ← 이 부분 추가: configurations에서 bootJar 제거
-configurations.all {
-    resolutionStrategy {
-        eachDependency { details ->
-            // 필요시 의존성 버전 강제 가능
-        }
-    }
-}
-
-// ← 이 부분 추가: plain jar를 artifact에서 제거
-afterEvaluate {
-    tasks.withType(Jar).configureEach { jarTask ->
-        if (jarTask.archiveClassifier.get() == 'plain') {
-            jarTask.enabled = false
-        }
-    }
 }
