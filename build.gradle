@@ -19,9 +19,17 @@ dependencyManagement {
 publishing {
     publications {
         maven(MavenPublication) {
-
             from components.java
 
+            // ← 이 부분 추가: 의존성 버전을 resolved 상태로 publish
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
         }
     }
 }
