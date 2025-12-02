@@ -14,41 +14,42 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public record ApiResponse<T>(
         boolean success,
         String message,
-        T data,
-        Long timestamp
+        T data
 ) {
+
     /**
      * 성공 응답 생성 (데이터 포함)
      */
     public static <T> ApiResponse<T> success(T data) {
-        return new ApiResponse<>(true, null, data, System.currentTimeMillis());
+        return new ApiResponse<>(true, null, data);
     }
 
     /**
      * 성공 응답 생성 (데이터 + 메시지)
      */
     public static <T> ApiResponse<T> success(T data, String message) {
-        return new ApiResponse<>(true, message, data, System.currentTimeMillis());
+        return new ApiResponse<>(true, message, data);
     }
 
     /**
      * 성공 응답 생성 (메시지만)
      */
     public static <T> ApiResponse<T> success(String message) {
-        return new ApiResponse<>(true, message, null, System.currentTimeMillis());
+        return new ApiResponse<>(true, message, null);
     }
+
 
     /**
      * 실패 응답 생성 (에러 데이터)
      */
     public static <T> ApiResponse<T> error(T errorData) {
-        return new ApiResponse<>(false, null, errorData, System.currentTimeMillis());
+        return new ApiResponse<>(false, null, errorData);
     }
 
     /**
      * 실패 응답 생성 (에러데이터 + 메시지)
      */
     public static <T> ApiResponse<T> error(T errorData, String message) {
-        return new ApiResponse<>(false, message, errorData, System.currentTimeMillis());
+        return new ApiResponse<>(false, message, errorData);
     }
 }
